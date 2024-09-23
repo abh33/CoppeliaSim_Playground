@@ -20,4 +20,4 @@ Python, ElectronJS, Lua, CoppeliaSim Simulator
 <br><b>Figure 1: CoppeliaSim Playground Welcome Screen</b>
 </div>
 
-<img src="./Images/img_2.png" alt="img2" width=480> <img src="./Images/img_3.png" alt="img3" width=480>
+<img src="./Images/img_2.png" alt="img2" width=360> <img src="./Images/img_3.png" alt="img3" width=360>
