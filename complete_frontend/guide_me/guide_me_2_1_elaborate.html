@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+    <style>
+        p{
+            font-size: 33px;
+            font-family: 'Fredoka', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_2_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">ELABORATE</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <img src="../resources/guideme2_1_img1.png" alt="alligning bot to side walls">
+            <p>
+                for making the bot move by alligning it parallel to the side walls you can use the fact that at parallel to the wall the ray vector will be normal to the surface. one of the components of ray vector as returned by coppeliasim proximity sensor will have value 0 if ray vector is normal to the surface and bot is perfectly alligned. if it is not perfectly 0 you can use it correct your orientation. best way to use it in a feedback loop:
+                <code>
+                    left_motor_speed = f(ray_vector)
+                    <br>
+                    right_motor_speed = g(ray_vector)
+                </code>
+                you have to determine f and g so that the bot can correct its orientation while also moving forward
+            </p>
+            <img src="../resources/guideme2_1_img2.png" alt="stopping bot with some offset">
+            <p>
+                you need to stop the bot at a certain distance before the front walls. but it is not possible to just suddenly stop it, it may stop after travelling some more distance. why not try to reduce its speed slowly as soon as it detects wall. try to reduce speed slowy based on its distance from the wall and then finally zero
+            </p>
+            <img src="../resources/guideme2_1_img3.png" alt="rotating bot">
+            <p>
+                finally rotate the bot after stopping it. again you can use ray vector to correct its new orientation
+            </p>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

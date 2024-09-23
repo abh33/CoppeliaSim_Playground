@@ -1,0 +1,24 @@
+
+body{
+    background-image: url("../Illustration.jpg"); /* line for setting background */
+    background-size:cover;
+    
+}
+
+.copsim_icon{
+    margin: 0;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.background_white{
+    height: 816px;
+    background-image: url("images/white_background.png"); /* line for setting background */
+    background-color: #0c111b;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

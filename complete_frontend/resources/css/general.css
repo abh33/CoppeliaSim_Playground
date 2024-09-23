@@ -1,0 +1,21 @@
+body{
+  background-image: url("../Illustration3.jpg"); /* line for setting background */
+  background-size:cover;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.e-yantra{
+    float:left;
+    width: 80px;
+    height: auto;
+  }
+
+.back{
+    float: right;
+    padding-right: 3%;
+    padding-top: 1em;
+  }
+
+.Q-text{
+  padding-top: 100px;
+}

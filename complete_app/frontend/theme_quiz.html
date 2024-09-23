@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>theme quiz</title>
+    <link rel="stylesheet" href="resources/css/general.css">
+    <link rel="stylesheet" href="resources/css/fredoka.css">
+    <style>
+        h2 {
+            font-size: 40px;
+        }
+
+        p {
+            font-size: 25px;
+        }
+        #submit{
+            display: block;
+            width: 100px;
+            height: 50px;
+            margin: auto;
+            cursor: pointer;
+            color: white;
+            background-color: green;
+            border-radius: 10px;
+        }
+        #submit:hover{
+            background-color: rgb(11, 189, 11);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background_white">
+        <div class="screen-top">
+            <img src="resources/e-logo-small.jpg" class="e-yantra"
+                onclick="location.href='https://portal.e-yantra.org/';" style="cursor: pointer;">
+            <img src="resources/back_icon.png" class="back" onclick="location.href='screen_4.html';"
+                style="cursor: pointer;">
+        </div>
+        <div class="Q-text">
+            <form name="quiz" id="quiz">
+                <div id="Q1" class="questions"></div>
+                <div id="Q2" class="questions"></div>
+                <div id="Q3" class="questions"></div>
+                <div id="Q4" class="questions"></div>
+                <div id="Q5" class="questions"></div>
+                <div id="Q6" class="questions"></div>
+                <!-- <div id="Q7" class="questions"></div> -->
+                <!-- <div id="Q8" class="questions"></div> -->
+                <!-- <div id="Q9" class="questions"></div> --> <!-- and so on as much question you need -->
+                <input id="submit" type="button" value="submit" onclick="check();">
+            </form>
+        </div>
+    </div>
+    <script src="javascript/quiz.js"></script>
+</body>
+</html>

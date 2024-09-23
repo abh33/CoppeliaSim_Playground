@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+    <style>
+        p{
+            font-size: 33px;
+            font-family: 'Fredoka', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_2_2.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">ELABORATE</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <img src="../resources/guideme2_2_img1.png" alt="line following">
+            <p>
+                this is the basic principal of line following, in this way we can exploit average pixel intensity for following lines. for this the bot is using its front vision sensors
+                <code>
+                    left_motor_speed = f(left_sensor_average_intensity)
+                    <br>
+                    right_motor_speed = f(right_sensor_average_intensity)
+                </code>
+                <img src="../resources/guideme2_2_img2.png" alt="allignment">
+                <p>
+                    sometimes even following a straight line, misallignment and disorientation may occur, you can also check it by using this method
+                </p>
+                <img src="../resources/guideme2_2_img3.png" alt="bot rotation">
+                <p>
+                    note the different stages, first we detect that the line is at left side since left sensor has low average pixel intensity. then we start rotating anticlockwise, in this stage both sensors have high average pixel intensity. we keep on rotating untill we get a low average pixel intesity for left sensor. then we understand that our rotation is complete. since the bot is rotating around its central axis, we have used its back vision sensors
+                </p>
+            </p>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

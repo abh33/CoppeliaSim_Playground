@@ -1,0 +1,23 @@
+{
+  "name": "coppeliasim-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "build": {
+    "extraResources": [
+      "./backend/extraResources/**"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^19.0.13"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "fs": "^0.0.1-security"
+  }
+}

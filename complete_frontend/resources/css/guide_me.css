@@ -1,0 +1,54 @@
+.hidden{
+    transition: 0.4s;
+}
+
+.heading{
+    font-size: xx-large;
+    text-shadow: -2px 3px 2px #dbdada;
+}
+
+.content{
+    margin-left: 10%;
+}
+
+.main-list{
+    list-style-image: url('../plus.png');
+}
+
+.main-list .sub-list{
+    list-style-image: url('../bullet.png');
+}
+
+h2 {
+    color: rgb(45, 45, 45);
+}
+
+#invisible-1{
+    display: none;
+}
+
+#invisible-2{
+    display: none;
+}
+
+#invisible-3{
+    display: none;
+}
+
+#invisible-4{
+    display: none;
+}
+
+#invisible-5{
+    display: none;
+}
+
+.demo-vid{
+    width: 80%;
+}
+
+code {
+    display: block;
+    font-size: large;
+    overflow: scroll;
+}

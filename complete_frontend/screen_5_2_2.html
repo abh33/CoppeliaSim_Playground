@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <title>lvl_select</title>
+    <link href="resources/css/screen_5_x.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="resources/css/fredoka.css">
+    <link href="resources/css/general.css" type="text/css" rel="stylesheet">
+</head>
+
+
+<body>
+   
+    <div class="grid">
+
+        <div class="grid-0">
+            <img src="resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="resources/back_icon.png" class="back" onclick= "location.href='screen_5_2.html';" style="cursor: pointer;">
+        </div>
+
+        <div class="grid-1">
+            <div class="title-box" style="background-color: rgb(226, 240, 203); color: rgb(67,71,41);">
+                <h3>LEVEL 2.2</h3>
+                <h2>MOVEMENT</h2>
+            </div>
+            <div class="level-desc">
+                <h4>
+                    The differential drive robot has to follow a line using vision sensors and stop at the places indicated.
+                </h4>
+                <a style="padding-top: 10px;padding-bottom: 10px;margin-left: 250px;" href='resources/rules/task2_2_rules.pdf' target="_blank" >Read more </a>
+            </div>
+            <div style="margin-top: 30px;">
+                <a class="play-buttons" style="margin-left: 15%;" id="evaluate">
+                    EVALUATE
+                </a>
+                <a class="play-buttons" style="margin-right: 15%;" id="restart">
+                    RESTART
+                </a>
+            </div>
+            <div class="grid-3">
+                <div class="star">
+                    <nobr>
+                    <img id="lstar1" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="lstar2" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="lstar3" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="lstar4" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="lstar5" src="resources/star-gray.png" width="50%" height="50%">
+                    <a id="latest-score">0</a>
+                    <b><br>Latest Run Score</b>
+                </nobr>
+                <nobr>
+                    <img id="bstar1" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="bstar2" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="bstar3" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="bstar4" src="resources/star-gray.png" width="50%" height="50%">
+                    <img id="bstar5" src="resources/star-gray.png" width="50%" height="50%">
+                    <a id="best-score">0</a>
+                    <b><br>Best Run Score</b>
+                </nobr>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <img class="demo-vid" src="../../backend/extraResources/task2/subtask2/task_2_demo.gif" >
+            </div>
+            <div class="guide-me">
+                
+                <a class="play-buttons" style="margin: 5%; position: relative;right: 50px;" onclick="window.location.href = 'guide_me_2_2.html'" target="_blank">
+                    Guide Me
+                </a>
+
+                <a id="openScene" class="play-buttons" style="margin: 5%; position: relative;right: 70px;">
+                    Open CoppeliaSim Scene
+                </a>
+
+                
+            </div>
+            
+            <div id="log-container" style="background-color: rgb(241, 251, 226); ">
+
+                Console:
+                <pre id="log"></pre>
+
+            </div>
+        </div>
+
+
+    </div>
+    <script src="../backend/task2_2.js"></script>
+</body>
+</html>

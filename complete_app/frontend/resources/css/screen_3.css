@@ -1,0 +1,65 @@
+
+.heading {
+    text-shadow: -4px 5px 2px #d0d0d0;
+    font-size: 60px;
+    text-align: center;
+    color: #313131;
+  }
+
+.themeUI{
+    width: 45%;
+    margin-top: 1%;
+    background: linear-gradient(to right, red, rgb(255, 145, 0));
+    border-radius: 10px;
+    padding: 1%;
+    box-shadow: 2px 5px 3px 2px #b7b7b7;
+    transition: 0.2s;
+    display: flex;
+}
+
+.themeUI:hover{
+    cursor: pointer;
+    transform: scale(1.04);
+}
+
+.screen3-themes{
+    list-style: none;
+}
+
+.theme-image{
+    width: 20%;
+    border-radius: 10px;
+    border: 3px solid white;
+}
+.theme_des{
+    width: 70%;
+    background: linear-gradient(to right, rgb(235, 133, 133), rgb(237, 237, 127));
+    border: 3px solid white;
+    padding: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    /* display: inline-block; */
+}
+.theme_des h1{
+    font-size: 2.2vw;
+    color: white;
+    border-bottom: 3px solid white;
+}
+.theme_des p{
+    font-size: 1.2vw;
+    color: white;
+}
+
+.coppeliasim {
+    display: block;
+    width: 300px;
+    margin-left: 75%;
+    margin-right: auto;
+    margin-top: 15%;
+    box-shadow: 2px 5px 3px 2px #b7b7b7;
+}
+
+.coppeliasim:hover{
+    transform: scale(1.04);
+}

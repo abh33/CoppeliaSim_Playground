@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+
+    <link rel="stylesheet" href="../javascript/highlight/styles/default.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_4.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul><h2>
+                <li>Download <a href="../resources/model/collection_box.ttm" target="_blank">collection box</a></li>
+                <li>Download <a href="../resources/model/robot_arm.ttm" target="_blank">robot arm</a></li>
+                <li>Download <a href="../resources/model/PGripStraight.ttm" target="_blank">gripper</a></li>
+                <li>First Download all this files and save them.</li>
+                <li>Add a force sensor to Diff_Drive_Bot base and mount collection box on it.</li>
+                <li>Add a force sensor to Diff_Drive_Bot base and mount robot arm on it.</li>
+                <li>Ensure that the arm faces the fruits and the basket’s flap is towards the deposition box.</li>
+                <li>Add the gripper and attach it to the last link of your arm with a force sensor.</li>
+                <li>keep the name of force sensor as 'connector'.</li>
+                <li>Attach it to the last link of your arm with a force sensor.</li>
+                <li>Add a vision sensor to your robotic arm, wherever your solution requires it. According to the solution provided by us, the end of the robotic arm is the best place.</li>
+                <li>name that vision sensor to 'fruit_vision_sensor'</li>
+                <li>Double click on vision sensor to open its properties and there check the Explicit handling checkbox</li>
+                <li>Our objective is to make the gripper sweep down from the top along every fruit column while looking for orange fruits. If it identifies one, it must stop and pluck it. Then it must drop it into its own collection basket, which will then empty it into the deposition box.</li>
+                <li>The following snippets of code are the ones used in the solution provided by us. You can either try copying it and following along with our video or use it as an inspiration for your own solution-</li>
+                <pre>
+<code>
+--In the following snippets of code, string signals are used to give signals to different parts of the code to perform their functions at the required time.
+--These are the signals our solution uses.
+--[[
+assign string signals to check if work is done.
+string signals in use:
+'scan'- checks if necessary to scan [start/stop]
+'jointPos2'- checks if joint2 should move or stop [midway/top/bottom/drop2]
+'gripper'- orders gripper [open/close/neutral]
+'move'- tells the bot to move to the next point [move/stop]
+'return to top'- waits till the arm reaches joint pos 0 [true/false]
+'going to drop'-tells you that the arm is on the way to drop fruit in collection basket[true/false]
+'basket'-opens/closes basket flap [open/close/neutral]
+'one more scan'- decides if the arm should scan again [true/false]
+'end simulation'- signals the python script to end sim [true/false]
+]]--
+
+</code>
+                </pre>
+                <br>
+                <pre>
+<code>
+--Attach this to the revolute joint of your collection basket
+
+function sysCall_init()
+
+    -- Get all necessary object handles
+
+    handle=sim.getObject(".")
+    sim.setStringSignal('basket','close')
+end
+
+function sysCall_actuation()
+
+    --This is the main loop in this child script.
+    
+    if sim.getStringSignal('basket')=='close' then
+        sim.setJointTargetPosition(handle, -115) -- '-115' is the joint position value for the basket to close
+        sim.setStringSignal('basket','neutral')
+        
+    elseif sim.getStringSignal('basket')=='open' then
+        sim.setJointTargetPosition(handle, 0)
+        sim.setStringSignal('basket','neutral')
+
+    else
+        
+    end
+    
+end  
+</code>
+                </pre>
+                <br>
+                <pre>
+<code>
+--Attach this to the base of your robotic_arm model.
+   
+function sysCall_init()
+
+    -- Get all necessary object handles
+
+    vsHandle=sim.getObject(":/fruit_vision_sensor")
+    jointHandle1=sim.getObject(":/Revolute_joint_1") --bottom
+    jointHandle2=sim.getObject(":/Revolute_joint_2") --top
+
+    -- Set required string signals
+    sim.setStringSignal('gripper','neutral')
+    sim.setStringSignal('scan','start')
+    sim.setStringSignal('return to top', 'false')
+    sim.setStringSignal('going to drop','false')
+    sim.setStringSignal('one more scan','false')
+    sim.setStringSignal('basket','open')
+    
+    -- Set arm velocity
+    arm_vel= 30*math.pi/180
+    
+end
+
+
+--[[Continuously waits for 'scan' signal to become 'start'.
+Then it makes the arm move down slowly while scanning the rack.
+If no ripe fruit is detected by the time it reaches the bottom, arm is made to go back to the top.
+]]--
+function sysCall_actuation()
+
+    if sim.getStringSignal('scan')=='start' then --from movement algorithm
+    
+        if sim.getJointVelocity(jointHandle2) ~= arm_vel then
+            sim.setJointTargetVelocity(jointHandle2,arm_vel)
+        end
+            
+        scan()
+        
+        if sim.getStringSignal('jointPos2')=='bottom' then --from encoders
+            sim.setStringSignal('scan','stop')
+            return_to_top()
+        end
+    end
+    
+    --[[This part decides when and how it needs to scan. Even if it finds one ripe fruit in a column
+    it still goes back to the top to start scanning again after dropping the fruit because there might be multiple in a column.
+    Once it is done with that column it signals the simulation to stop.]]--
+    if sim.getStringSignal('return to top')=='true' then
+        if sim.getStringSignal('jointPos2')=='top' then
+            sim.setJointTargetVelocity(jointHandle2,0)
+            sim.setStringSignal('return to top', 'false')
+            if sim.getStringSignal('one more scan')=='true' then
+                sim.setStringSignal("move","stop")
+                sim.setStringSignal('scan','start')
+            else
+                sim.setStringSignal('end simulation','true')
+            end
+        end
+    end
+    
+    --[[This part controls the dropping of fruits into the collection basket of the robot.
+    Once it drops it successfully, it returns to the top of the column to resume scanning.]]--
+    if sim.getStringSignal('going to drop')=='true' then
+        if sim.getStringSignal('jointPos2')=='drop2' then
+            sim.setJointTargetVelocity(jointHandle2,0)
+            sim.setStringSignal('gripper','open')
+            sim.setStringSignal('going to drop','false')
+            return_to_top()
+        end
+    end    
+end
+
+
+--[[
+Each time the function is called, it gets the image details from vision sensor.
+When the average green and red values are within the limits, it is considered to have found a ripe fruit.
+It then calls the pluck_n_drop function.
+Else it returns control to the actuation function.
+]]--
+function scan()
+
+    detectionCount=0
+    auxiliaryValuePacket1={}
+
+    --[[ By default for sim.handleVisionSensor() CoppeliaSim returns one packet of 15 auxiliary values:
+    the minimum of {intensity, red, green, blue, depth value}, 
+    the maximum of {intensity, red, green, blue, depth value}, 
+    and the average of {intensity, red, green, blue, depth value}
+    ]]--
+    detectionCount, auxiliaryValuePacket1 = sim.handleVisionSensor(vsHandle)
+
+    -- Checking if the average rgb values lie between acceptable values for orange
+    if ((auxiliaryValuePacket1[12]>=0.60 and auxiliaryValuePacket1[12]<=0.74) and 
+        (auxiliaryValuePacket1[13]>=0.40 and auxiliaryValuePacket1[13]<=0.50) and 
+        (auxiliaryValuePacket1[14]>=0.0 and auxiliaryValuePacket1[14]<=0.1)) then
+
+        sim.setJointTargetVelocity(jointHandle2,0)
+        pos = sim.getJointPosition(jointHandle2) --pos indicates the position of jointHandle2
+
+        if pos<1.2 then
+            sim.setStringSignal('one more scan','true')
+        else
+            sim.setStringSignal('one more scan','false')
+        end
+        pluck()
+        
+    else
+        sim.setStringSignal('one more scan','false')
+    end
+
+end
+
+
+--[[
+Closes the gripper around the ripe berry.
+Gives velocity to joint 2 to make it move to position.
+Gives velocity to joint 1 to make it move to position.
+Opens gripper.
+Calls return_to_top function.
+]]--
+function pluck()
+
+    sim.setStringSignal('gripper','close')
+    sim.setStringSignal('scan','stop')
+    sim.setJointTargetVelocity(jointHandle2, -arm_vel)
+    sim.setStringSignal('going to drop','true')
+            
+end
+
+--[[
+Decides how the arm should move to the top and accordingly gives it velocity.
+If the arm has just finished dropping a fruit then it will get arm_vel.
+If it has just finished scanning a column then it will get -arm_vel.
+]]--
+
+function return_to_top()
+
+    if sim.getJointPosition(jointHandle2) <0 then
+        sim.setJointTargetVelocity(jointHandle2, arm_vel)
+    else
+        sim.setJointTargetVelocity(jointHandle2, -arm_vel)
+    end  
+    sim.setStringSignal('return to top', 'true')
+
+end
+</code>
+                </pre>
+                <br>
+                <pre>
+<code>
+--Attach this to the revolute joint of your robotic_arm
+
+function sysCall_init()
+    -- Get all necessary object handles
+    joint2= sim.getObject(".")
+end
+
+function sysCall_actuation()
+    
+    --[[ This is to keep updating the approximate position of the robotic arm]]--
+    currentPos= sim.getJointPosition(joint2)
+    if ((currentPos<0.025) and (currentPos>-0.025)) then
+        sim.setStringSignal('jointPos2','top')
+        
+    elseif ((currentPos<2.05) and (currentPos>2)) then
+        sim.setStringSignal('jointPos2','bottom')
+    
+    elseif ((currentPos<-0.80) and (currentPos>-0.85)) then
+        sim.setStringSignal('jointPos2','drop2')
+    
+    else
+        sim.setStringSignal('jointPos2','midway')
+        
+    end
+end                        
+</code>
+                </pre>
+                <br>
+                <pre>
+<code>
+--[[This is the code for the PGripStraight gripper. As previously mentioned, you will be
+required to go through the instructions provided by your gripper to modify this 
+code to suit your needs.]]--
+
+function sysCall_init() 
+    connector=sim.getObject('./attachPoint')
+    objectSensor=sim.getObject('./attachProxSensor')
+end
+
+function sysCall_actuation() 
+
+    --[[This part keeps checking for objects between the prongs of the gripper.
+    Once it finds something, it 'fakes' gripping by making the detected object the gripper's child.
+    When the signal to drop the object is given, it turns the object parentless so that it falls off.]]--
+    if (sim.getStringSignal('gripper')=='close') then
+        index=0
+        while true do
+            shape=sim.getObjects(index,sim.object_shape_type)
+            if (shape==-1) then
+                break
+            end
+            if (sim.getObjectInt32Param(shape,sim.shapeintparam_static)==0) and (sim.getObjectInt32Param(shape,sim.shapeintparam_respondable)~=0) and (sim.checkProximitySensor(objectSensor,shape)==1) then
+                --[[Ok, we found a non-static respondable shape that was detected
+                Do the connection:]]--
+                attachedShape=shape
+                sim.setObjectParent(attachedShape,connector,true)
+                break
+            end
+        index=index+1
+        end
+        sim.setStringSignal('gripper','neutral')
+
+
+    elseif (sim.getStringSignal('gripper')=='open') then
+
+        sim.setObjectParent(attachedShape,-1,true)
+
+        sim.setStringSignal('gripper','neutral')
+        
+    else
+    
+    end
+end
+            
+</code>
+                </pre>
+                <br>
+
+            </h2></ul>
+            <iframe src="https://drive.google.com/file/d/1pZM3nfWyJJWVq7BVtK3f04YzXXQikVb0/preview" width="640" height="480" allow="autoplay"></iframe>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

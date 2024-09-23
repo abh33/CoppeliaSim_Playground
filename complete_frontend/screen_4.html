@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="resources/css/general.css">
+    <link rel="stylesheet" href="resources/css/fredoka.css">
+    <link rel="stylesheet" href="resources/css/screen_4.css">
+</head>
+
+<body>
+    <div class="grid">
+
+        <div class="grid-0">
+            <img src="resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="resources/back_icon.png" class="back" onclick="window.location.href= 'screen_3.html';" style="cursor: pointer;">
+        </div>
+
+        <div class="grid-1">
+            <div class="theme_des" style="margin-left: 50px;width: 650px;padding-bottom: 50px;padding-top: 50px;padding-left: 50px;padding-right: 50px;">
+                <h1>Fruit Plucking Robot</h1>
+            </div>
+            <div class="screen4-text">
+                <h1>To design a robot which can move autonomously in an arena to pluck and deposit ripe fruits from a tree</h1>
+                <p onclick="window.location.href= 'screen_4_rules.html';">Read more</p>
+            </div>
+
+            <div>
+                <a class="play-buttons" style="margin-left: 7%;" href="resources/rulebook.pdf" target="_blank">
+                    RULEBOOK
+                </a>
+                <a class="play-buttons" style="margin-left: 0%; cursor: pointer;" href="./theme_quiz_screen_4.html">
+                    Theme Quiz
+                </a>
+                <a class="play-buttons" style="margin-left: 0%;margin-right: 0%;padding-left: 40px;padding-right: 40px;" href="screen_5.html">
+                    PLAY
+                </a>
+            </div>
+            
+        </div>
+
+        <div class="grid-2">
+            <img class="theme-images" src="resources/theme_demo.gif" alt="">
+        </div>
+
+        <div class="grid-3" style="margin-top: 10px;">
+            <span class="level">Level 1</span>
+            <span class="level">Level 2</span>
+            <span class="level">Level 3</span>
+            <span class="level">Level 4</span>
+            <span class="level">Level 5<br></span>
+            <span id= "dot-1" class="dot1"></span>
+            <span id= "bar-1" class="bar" style="position: relative; bottom: 24px;"></span>
+            <span id= "dot-2" class="dot"></span>
+            <span id= "bar-2" class="bar" style="position: relative; bottom: 24px;"></span>
+            <span id= "dot-3" class="dot"></span>
+            <span id= "bar-3" class="bar" style="position: relative; bottom: 24px;"></span>
+            <span id= "dot-4" class="dot"></span>
+            <span id= "bar-4" class="bar" style="position: relative; bottom: 24px;"></span>
+            <span id= "dot-5" class="dot" style="position:relative; right:50px"></span>
+        </div>
+           
+    </div>
+
+    <script src="../backend/progress_bar.js"></script>
+
+</body>
+</html>

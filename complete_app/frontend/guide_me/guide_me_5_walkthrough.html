@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+
+    <link rel="stylesheet" href="../javascript/highlight/styles/default.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "location.href='https://portal.e-yantra.org/';" style="cursor: pointer;">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_5.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul><h2>
+                <li>Download <a href="../resources/model/collection_box.ttm" target="_blank">collection box</a></li>
+                <li>Download <a href="../resources/model/robot_arm.ttm" target="_blank">robot arm</a></li>
+                <li>Download <a href="../resources/model/PGripStraight.ttm" target="_blank">gripper</a></li>
+                <li>First Download all this files and save them.</li>
+                <li>Build the bot in the same way as we did in task 4. This time only script will be different. The vieo will also demonstrate how to add the scripts, for building the bot please refer task 4</li>
+                <br>
+                <p>Attach the below code in 'Diff_Drive_Bot'</p>
+                <pre>
+<code>
+function sysCall_init()
+    ---- do some initializations ------------------------------------------------------------------------------------
+    corout=coroutine.create(coroutineMain) -- our coroutine function                                              ---
+    leftmotor = sim.getObject('./left_joint') -- left motor handle                                                ---
+    rightmotor = sim.getObject('./right_joint') -- right motor handle                                             ---
+    left = sim.getObject('./left_vision') -- handle for front left vision sensor                                  ---
+    right = sim.getObject('./right_vision') -- handle for front right vision sensor                               ---
+    leftback = sim.getObject('./left_vision_back') -- handle for back left vision sensor                          ---
+    rightback = sim.getObject('./right_vision_back') -- handle for back right vision sensor                       ---
+    sim.setStringSignal("move","start") -- at first we are signalling to move                                     ---
+    sim.setStringSignal("scan","stop") -- at first we are signalling to not try to scan fruits or manipulate arm  ---
+    -----------------------------------------------------------------------------------------------------------------
+    v = 2.0 -- linear velocity of bot
+    r = 3.0 -- rotational velocity of bot
+    eps = 0.01 -- just a small constant
+    flag = 0 -- a flag value, will also be used to determine the no. of stoppages crossed in a line
+    initial = 0 -- a variable, will be used for time delay purposes
+    count = 0 -- this count will help us to know at which stopping places deposition zones are present, basically it counts how many times the bot have stopped to pluck fruits after starting from corner of arena
+    turn = 1 -- 0 for starting from right side of arena, 1 for starting from left side of arena
+end
+
+function sysCall_actuation()
+    ---- first our coroutine finction will take the bot to the corner od arena ---------------
+    if coroutine.status(corout)~='dead' then -- untill our coroutine function is alive     ---
+        local ok,errorMsg=coroutine.resume(corout) -- run the coroutine function           ---
+        if errorMsg then                                                                   ---
+            error(debug.traceback(corout,errorMsg),2)                                      ---
+        end                                                                                ---
+        --------------------------------------------------------------------------------------
+    else -- our coroutine function is dead(the bot have reached the corner of arena)
+        if sim.getStringSignal("move") == "start" then -- if we are instructed to move
+            if count%12 == 3 or count%12 == 9 then -- just to know when to close basket door(leaving deposition zones)
+                sim.setStringSignal("basket","close") -- close basket
+            end
+            ---- this part is responsible to move the bot and stop at the stopping positions. also it counts the no. of stopping points crossed since after 3 stopping points the bot needs to turn. this part only handle stopping and restarting the bot in a straight line. this doesn't handle turning the bot ----------------------------------------------------------------
+            if flag < 3 then -- means we have to move straight following line(if any stop point is detected then we only have to only stop)                                                                                                                                                                                                                                     ---
+                steer() -- move with proper steering                                                                                                                                                                                                                                                                                                                            ---
+                if stop(count) then -- we detected a stopping point                                                                                                                                                                                                                                                                                                             ---
+                    flag = flag + 1 -- changing flag(remember after 3 consecutive stoppages the flag will become 3 and command will not enter this part due to line no-35, it is done because after three consecutive stoppages, in the next stopage the bot have to turn too rather than to only stop, this condition is taken care in lower block starting at line no-49)     ---
+                    count = count + 1 -- updating count                                                                                                                                                                                                                                                                                                                         ---
+                    move(0,0) -- stop                                                                                                                                                                                                                                                                                                                                           ---
+                    sim.setStringSignal("move","stop") -- indicating that movement has stopped                                                                                                                                                                                                                                                                                  ---
+                    sim.setStringSignal("scan","start") -- signalling for fruit scanning and arm manipulation                                                                                                                                                                                                                                                                   ---
+                    if count%12 == 1 or count%12 == 2 or count%12 == 3 or count%12 == 7 or count%12 == 8 or count%12 == 9 then -- just to know when to open basket door(approaching deposition zones)                                                                                                                                                                           ---
+                        sim.setStringSignal("basket","open") -- open basket                                                                                                                                                                                                                                                                                                     ---
+                    end                                                                                                                                                                                                                                                                                                                                                         ---
+                end                                                                                                                                                                                                                                                                                                                                                             ---
+            -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            ---- this part will take control when the bot have crossed 3 consecutive stopping point in a line. this will move the bot after 3rd stop point and make it move untill the turning point, then it will turn the bot and give control back to block starting at line no-35 for next path -------------
+            else                                                                                                                                                                                                                                                                                              ---
+                if flag < 4 then -- means we have to move straight following line(if any stop point is detected then we only have to turn this time)                                                                                                                                                          ---
+                    steer()                                                                                                                                                                                                                                                                                   ---
+                    if sim.getSimulationTime() - initial > 1/v and (signal(direction)) < 0.5 then --stopping point is detected(remember this time we have to turn since it is arena corner)                                                                                                                   ---
+                        initial = sim.getSimulationTime() -- this will be used as a delay in line no-59 to give bot some time to turn a bit                                                                                                                                                                   ---
+                        if turn == 0 then move(-r,r) else move(r,-r) end                                                                                                                                                                                                                                      ---
+                        flag = 4 -- once we know that we have to turn, we are not steering the bot(line no-51)                                                                                                                                                                                                ---
+                    end                                                                                                                                                                                                                                                                                       ---
+                end                                                                                                                                                                                                                                                                                           ---
+                if flag == 4 and sim.getSimulationTime() - initial > 4.5/r and signal(direction) < 0.5 then -- if we rotated completely                                                                                                                                                                       ---
+                    flag = 0 -- resetting flag to be used in counting for next path                                                                                                                                                                                                                           ---
+                    move(0,0) -- stop rotating                                                                                                                                                                                                                                                                ---
+                    steer() -- start steering the bot                                                                                                                                                                                                                                                         ---
+                    if count%12 == 9 then initial = sim.getSimulationTime() + 2 end -- this time we want our bot to cross the turning point and come some distance ahead of it, therefore a larger delay                                                                                                      ---
+                end                                                                                                                                                                                                                                                                                           ---
+            end                                                                                                                                                                                                                                                                                               ---
+            -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        else -- we are not instructed ti move(scanning of fruits/arm manipulation is taking place right now)
+            initial = sim.getSimulationTime() -- we want our delay to be counted while we are moving or rotating, not when bot is stopped, therefore resetting it while we are stop
+        end
+    end
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+--- this purpose of this coroutineMain function is to only make the bot reach at the corner of the arena with facing forward. after this, the coroutine function will die and never execute again -------
+function coroutineMain()                                                                                                                                                                              ---
+    -- Put some initialization code here                                                                                                                                                              ---
+    sim.setThreadAutomaticSwitch(false) -- we are disabling auto thread switching, but we will switch it by our own                                                                                   ---
+                                                                                                                                                                                                      ---
+    move(1,1) -- start moving to come out of start zone                                                                                                                                               ---
+    sim.wait(1) -- waiting for bot to come out of start zone by using a small time delay                                                                                                              ---
+    ---- this block will keep the program busy untill the program does not break out of the loop(i.e. does not reach its first stopping point just in front of start) ---------                       ---
+    while signal(leftback) > 0.3 or signal(rightback) > 0.3 do -- untill we not reach our first stopping point(the point just in front of start)                            ---                       ---
+        sim.switchThread() -- we are switching threads(that is, we are nt allowing our program to pass this), while the simulation is still running                         ---                       ---
+    end                                                                                                                                                                     ---                       ---
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------                       ---
+    if turn == 0 then -- if we are to start from right side                                                                                                                                           ---
+        move(1,-1) -- turning clockwise                                                                                                                                                               ---
+        direction = leftback                                                                                                                                                                          ---
+    else -- we are to start from left side                                                                                                                                                            ---
+        move(-1,1) -- turning anticlockwise                                                                                                                                                           ---
+        direction = rightback                                                                                                                                                                         ---
+    end                                                                                                                                                                                               ---
+    sim.wait(4.5) -- time delay for turning                                                                                                                                                           ---
+    ---- keep on rotating untill we not get a 90 degree turn(using vision sensors to detect it) -------                                                                                               ---
+    while signal(leftback) > 0.5 and signal(rightback) > 0.5 do                                     ---                                                                                               ---
+        sim.switchThread() -- keep on running the simulation but don't get out of the loop          ---                                                                                               ---
+    end                                                                                             ---                                                                                               ---
+    ---------------------------------------------------------------------------------------------------                                                                                               ---
+    move(0,0) -- stop rotating                                                                                                                                                                        ---
+    sim.setStringSignal("move","stop") -- signalling to stop bot's movement                                                                                                                           ---
+    sim.setStringSignal("scan","start") -- signalling to start scanning of fruits and arm manipulation                                                                                                ---
+    ----- wait untill scanning and arm manipulation is not done and we don't get signal to move --------                                                                                              ---
+    while sim.getStringSignal("move") == "stop" or sim.getStringSignal("scan") == "start"  do        ---                                                                                              ---
+        sim.switchThread()                                                                           ---                                                                                              ---
+    end                                                                                              ---                                                                                              ---
+    ----------------------------------------------------------------------------------------------------                                                                                              ---
+    steer() -- start moving the bot forward with proper steering                                                                                                                                      ---
+    sim.wait(1/v) -- just a small time delay so that during this time the bot's vision sensors field of view will come out of the stopping zone                                                       ---
+    ---- untill we not get our second stopping point, keep the bot moving with steering --------                                                                                                      ---
+    while signal(direction) > 0.75 do                                                        ---                                                                                                      ---
+        steer()                                                                              ---                                                                                                      ---
+        sim.switchThread()                                                                   ---                                                                                                      ---
+    end                                                                                      ---                                                                                                      ---
+    --------------------------------------------------------------------------------------------                                                                                                      ---
+    move(0,0) -- stop moving                                                                                                                                                                          ---
+    sim.setStringSignal("move","stop") -- signalling to stop bot's movement                                                                                                                           ---
+    sim.setStringSignal("scan","start") -- signalling to start scanning of fruits and arm manipulation                                                                                                ---
+    ----- wait untill scanning and arm manipulation is not done and we don't get signal to move --------                                                                                              ---
+    while sim.getStringSignal("move") == "stop" or sim.getStringSignal("scan") == "start"  do        ---                                                                                              ---
+        sim.switchThread()                                                                           ---                                                                                              ---
+    end                                                                                              ---                                                                                              ---
+    ----------------------------------------------------------------------------------------------------                                                                                              ---
+    steer() -- start moving the bot forward with proper steering                                                                                                                                      ---
+    sim.wait(1/v) -- just a small time delay so that during this time the bot's vision sensors field of view will come out of the stopping zone                                                       ---
+    ---- untill we not get to our arena corner point from where we have to turn, keep the bot moving with steering --------                                                                           ---
+    while signal(direction) > 0.75 do                                                                                   ---                                                                           ---
+        steer()                                                                                                         ---                                                                           ---
+        sim.switchThread()                                                                                              ---                                                                           ---
+    end                                                                                                                 ---                                                                           ---
+    -----------------------------------------------------------------------------------------------------------------------                                                                           ---
+    if turn == 0 then move(-r,r) else move(r,-r) end -- rotate accordingly                                                                                                                            ---
+    sim.wait(4.5/r) -- a small delay for rotation                                                                                                                                                     ---
+    ---- keep on rotating untill we not get a 90 degree turn(using vision sensors to detect it) -------                                                                                               ---
+    while signal(direction) > 0.5 do                                                                ---                                                                                               ---
+        sim.switchThread()                                                                          ---                                                                                               ---
+    end                                                                                             ---                                                                                               ---
+    ---------------------------------------------------------------------------------------------------                                                                                               ---
+    move(0,0) -- stop rotating                                                                                                                                                                        ---
+    sim.setThreadAutomaticSwitch(true) -- since our coroutine function has finished up, we are again enabling auto thread switching                                                                   ---
+                                                                                                                                                                                                      ---
+    -- here our bot have reached the corner of arena with our bot looking front, from here on the action we be handled by sysCall_actuation function                                                  ---
+    -- the purpose of this coroutine function was to only made the bot reach this position and orientation from the start point, it is now done                                                       ---
+end                                                                                                                                                                                                   ---
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- this function finds the average value of a Lua table -----
+function mean(t)                                           ---
+    local sum = 0                                          ---
+    for _,i in pairs(t) do                                 ---
+            sum = sum + i                                  ---
+    end                                                    ---
+    return sum/#t                                          ---
+end                                                        ---
+--------------------------------------------------------------
+---- a function to read the vision sensor readings and return the average of all pixel values -----
+function signal(sensor)                                                                         ---
+    local tab = sim.getVisionSensorImage(sensor+sim.handleflag_greyscale)                       ---
+    return mean(tab)                                                                            ---
+end                                                                                             ---
+---------------------------------------------------------------------------------------------------
+---- function for actuating bot's motors with their speed values------
+function move(L,R)                                                 ---
+    sim.setJointTargetVelocity(leftmotor, L)                       ---
+    sim.setJointTargetVelocity(rightmotor, R)                      ---
+end                                                                ---
+----------------------------------------------------------------------
+function steer()
+    local l = signal(left) + eps -- calculating left motor speed coeeficient using left sensor reading(eps is to just ensure that it is not completely zero)
+    local r = signal(right) + eps -- calculating left motor speed coeeficient using left sensor reading(eps is to just ensure that it is not completely zero)
+    move(l*v,r*v) -- actuate bot's motors
+end
+--- this function will take c(count) to know at which stopping point the bot is and decide which logic should be used to stop it(since all stopping points are same except 2 points in front of tree) ----------------------------
+function stop(c)                                                                                                                                                                                                               ---
+    if c%12 == 9 or c%12 == 11 then -- this means that next time the bot will need to stop at one of the 2 stopping points in front of arena                                                                                   ---
+        value = (sim.getSimulationTime() - initial > 2/v and signal(direction) < 0.75) -- then will use this, check only one back vision sensor, since these points are not forming the cross '+' pattern of black lines       ---
+    else -- we are at rest of the stopping points                                                                                                                                                                              ---
+        value = (sim.getSimulationTime() - initial > 2/v and signal(leftback) < 0.75 and signal(rightback) < 0.75)-- theis time both vision sensors will be used since these points are forming the cross '+' pattern          ---
+    end                                                                                                                                                                                                                        ---
+    return value                                                                                                                                                                                                               ---
+end                                                                                                                                                                                                                            ---
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- See the user manual or the available code snippets for additional callback functions and details
+
+</code>
+                </pre>
+                <br>
+                <p>Attach the below code in the revolute joint of collection box</p>
+                <pre>
+<code>
+function sysCall_init()
+    -- do some initialization here
+    handle=sim.getObject(".")
+    sim.setStringSignal('basket','close')
+end
+
+function sysCall_actuation()
+    -- put your actuation code here
+    if sim.getStringSignal('basket')=='close' then
+        sim.setJointTargetPosition(handle, -115)
+        sim.setStringSignal('basket','neutral')
+        
+    elseif sim.getStringSignal('basket')=='open' then
+        sim.setJointTargetPosition(handle, 0)
+        sim.setStringSignal('basket','neutral')
+
+    else
+        
+    end
+    
+end
+
+function sysCall_sensing()
+    -- put your sensing code here
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+
+-- See the user manual or the available code snippets for additional callback functions and details
+
+</code>
+                </pre>
+                <br>
+                <p>Attach this to the base of robotic arm model</p>
+                <pre>
+<code>
+    
+--[[
+assign string signals to check if work done.
+string signals in use:
+'scan'- checks if necessary to scan [start/stop]
+'jointPos2'- checks if joint2 should move or stop [midway/top/bottom/drop2]
+'gripper'- orders gripper [open/close/neutral]
+'move'- tells the bot to move to the next point [move/stop]
+'return to top'- waits till the arm reaches joint pos 0 [true/false]
+'going to drop'-tells you that the arm is on the way to drop fruit in collection basket[true/false]
+'basket'-opens/closes basket flap [open/close/neutral]
+]]--
+    
+function sysCall_init()
+
+    vsHandle=sim.getObject(":/fruit_vision_sensor")
+    jointHandle1=sim.getObject(":/Revolute_joint_1") --bottom
+    jointHandle2=sim.getObject(":/Revolute_joint_2") --top
+
+    sim.setStringSignal('gripper','neutral')
+    sim.setStringSignal('scan','stop')
+    sim.setStringSignal('return to top', 'false')
+    sim.setStringSignal('going to drop','false')
+    sim.setStringSignal('one more scan','false')
+    
+    vel2= 30*math.pi/180
+    
+end
+
+
+--[[Continuously waits for 'scan' signal to become 'start'.
+Then it makes the arm move down slowly while scanning the rack.
+If no ripe fruit is detected by the time it reaches the bottom, arm is made to go back to the top.
+]]--
+function sysCall_actuation()
+
+    if sim.getStringSignal('scan')=='start' then --from movt algo
+    
+        if sim.getJointVelocity(jointHandle2) ~= vel2 then
+            sim.setJointTargetVelocity(jointHandle2,vel2)
+        end
+            
+        scan()
+        
+        if sim.getStringSignal('jointPos2')=='bottom' then --from encoders
+            sim.setStringSignal('scan','stop')
+            return_to_top()
+        end
+    end
+    
+    if sim.getStringSignal('return to top')=='true' then
+        if sim.getStringSignal('jointPos2')=='top' then
+            sim.setJointTargetVelocity(jointHandle2,0)
+            sim.setStringSignal('return to top', 'false')
+            if sim.getStringSignal('one more scan')=='true' then
+                sim.setStringSignal("move","stop")
+                sim.setStringSignal('scan','start')
+            else
+                sim.setStringSignal('move','start')
+            end
+        end
+    end
+    
+    if sim.getStringSignal('going to drop')=='true' then
+        if sim.getStringSignal('jointPos2')=='drop2' then
+            sim.setJointTargetVelocity(jointHandle2,0)
+            sim.setStringSignal('gripper','open')
+            sim.setStringSignal('going to drop','false')
+            return_to_top()
+        end
+    end
+      
+end
+
+
+--[[
+Each time the function is called, it gets the image details from vision sensor.
+When the average green and red values are within the limits, it is considered to have found a ripe fruit.
+It then calls the pluck_n_drop function.
+Else it returns control to the actuation function.
+]]--
+function scan()
+    detectionCount=0
+    auxiliaryValuePacket1={}
+    detectionCount, auxiliaryValuePacket1 = sim.handleVisionSensor(vsHandle)
+
+    if ((auxiliaryValuePacket1[12]>=0.60 and auxiliaryValuePacket1[12]<=0.74) and (auxiliaryValuePacket1[13]>=0.45 and auxiliaryValuePacket1[13]<=0.50)) then
+        --print('orange')
+        --print(auxiliaryValuePacket1[12],auxiliaryValuePacket1[13])
+        sim.setJointTargetVelocity(jointHandle2,0)
+        pos = sim.getJointPosition(jointHandle2)
+        --print('pos',pos)
+        if pos<1.2 then
+            sim.setStringSignal('one more scan','true')
+        else
+            sim.setStringSignal('one more scan','false')
+        end
+        pluck()
+        
+    else
+        --print(auxiliaryValuePacket1[12],auxiliaryValuePacket1[13])
+        sim.setStringSignal('one more scan','false')
+    end
+
+end
+
+--[[
+Closes the gripper around the ripe berry.
+Gives velocity to joint 2 to make it move to position.
+Gives velocity to joint 1 to make it move to position.
+Opens gripper.
+Calls return_to_top function.
+]]--
+function pluck()
+
+    sim.setStringSignal('gripper','close')
+    sim.setStringSignal('scan','stop')
+    sim.setJointTargetVelocity(jointHandle2, -vel2)
+    sim.setStringSignal('going to drop','true')
+            
+end
+
+--[[
+Gives velocity to joint 2 to make it move to position.
+Gives velocity to joint 1 to make it move to position.
+Sets the string signals and hands over control to the movement algorithm.
+]]--
+
+function return_to_top()
+
+    if sim.getJointPosition(jointHandle2) <0 then
+        sim.setJointTargetVelocity(jointHandle2, vel2)
+    else
+        sim.setJointTargetVelocity(jointHandle2, -vel2)
+    end  
+    sim.setStringSignal('return to top', 'true')
+    
+
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+
+-- See the user manual or the available code snippets for additional callback functions and details
+
+</code>
+                </pre>
+                <br>
+                <p>Attach this to the revolute joint of robotic arm</p>
+                <pre>
+<code>
+function sysCall_init()
+    -- do some initialization here
+    joint2= sim.getObject(".")
+end
+
+function sysCall_actuation()
+    -- put your actuation code here
+    currentPos= sim.getJointPosition(joint2)
+    if ((currentPos<0.025) and (currentPos>-0.025)) then
+        sim.setStringSignal('jointPos2','top')
+        
+    elseif ((currentPos<2.05) and (currentPos>2)) then
+        sim.setStringSignal('jointPos2','bottom')
+    
+    elseif ((currentPos<-0.80) and (currentPos>-0.85)) then
+        sim.setStringSignal('jointPos2','drop2')
+    
+    else
+        sim.setStringSignal('jointPos2','midway')
+        
+    end
+end
+
+function sysCall_sensing()
+    -- put your sensing code here
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+
+-- See the user manual or the available code snippets for additional callback functions and details
+
+</code>
+                </pre>
+                <br>
+                <p>Attach this to PGripStraight gripper</p>
+                <pre>
+<code>
+function sysCall_init() 
+    connector=sim.getObject('./attachPoint')
+    objectSensor=sim.getObject('./attachProxSensor')
+end
+
+function sysCall_actuation() 
+    if (sim.getStringSignal('gripper')=='close') then
+        index=0
+        while true do
+            shape=sim.getObjects(index,sim.object_shape_type)
+            if (shape==-1) then
+                break
+            end
+            if (sim.getObjectInt32Param(shape,sim.shapeintparam_static)==0) and (sim.getObjectInt32Param(shape,sim.shapeintparam_respondable)~=0) and (sim.checkProximitySensor(objectSensor,shape)==1) then
+                --[[Ok, we found a non-static respondable shape that was detected
+                Do the connection:]]--
+                attachedShape=shape
+                sim.setObjectParent(attachedShape,connector,true)
+                break
+            end
+        index=index+1
+        end
+        --sim.setJointTargetVelocity(openClosemotorHandle,-0.5)
+        sim.setStringSignal('gripper','neutral')
+
+
+    elseif (sim.getStringSignal('gripper')=='open') then
+
+        sim.setObjectParent(attachedShape,-1,true)
+
+        --sim.setJointTargetVelocity(openClosemotorHandle,0.5)
+        sim.setStringSignal('gripper','neutral')
+        
+    else
+    
+    end
+end 
+
+</code>
+                </pre>
+            </h2></ul>
+            <iframe src="https://drive.google.com/file/d/1wVWcP7fkA_3oK2s83dU6Ld_Kf6UzPDIi/preview" width="640" height="480" allow="autoplay"></iframe>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

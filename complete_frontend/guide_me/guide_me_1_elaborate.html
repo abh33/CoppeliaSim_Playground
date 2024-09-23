@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">ELABORATE</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul class="main-list">
+                <p class="topic">
+                    <div onclick="make_visible_1()">
+                    <li>
+                        <h1>Help with vision sensor</h1></div>
+                        <h2 id="invisible-1"> 
+                            <ul class="sub-list">
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensors.htm</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensorPropertiesDialog.htm</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensorDescription.htm</li>
+                                <li>If the above links don't help much then try different values of clipping plane and ortho. size in the scene object properties of the vision sensor.</li>
+                            </ul>
+                        </h2>                
+                    </li>
+                </p>
+                <p class="topic">
+                    <div onclick="make_visible_2()">
+                    <li>
+                    <h1>Help with child script</h1></div>
+                    <h2 id="invisible-2">
+                        <ul class="sub-list">
+                            <li>Try right-clicking on the icon of the object you wish to attach the child script to.</li>
+                            <li>https://www.coppeliarobotics.com/helpFiles/en/childScripts.htm</li>
+                            <li>https://coppeliarobotics.com/helpFiles/en/simulationScripts.htm</li>
+                        </ul>
+                    </h2>
+                </li></p>
+                <p class="topic">
+                    <div onclick="make_visible_3()">
+                    <li>
+                    <h1>Help with the code</h1></div>
+                    <h2 id="invisible-3">
+                        <ul class="sub-list">
+                            These are the functions and resources you might require for your solution:
+                            <li>https://www.coppeliarobotics.com/helpFiles/</li>
+                            <li>https://www.coppeliarobotics.com/helpFiles/en/regularApi/simHandleVisionSensor.htm</li>
+                            <li>https://www.coppeliarobotics.com/helpFiles/en/accessingSceneObjects.htm</li>
+                            <li>https://www.coppeliarobotics.com/helpFiles/en/regularApi/simSetStringSignal.htm</li>
+                        </ul>
+                    </h2>                
+                </li></p>
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

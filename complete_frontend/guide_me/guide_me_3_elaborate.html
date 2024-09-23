@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_3.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">ELABORATE</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul class="main-list">
+                <h1> Designing a Robotic Arm<br><br>
+                    To build a robot arm you will first need to design the prescribed three basic parts.
+                    (Note- This tutorial will be designing and building an articulated type of robotic arm, but you are
+                    free to take inspiration from the design method and build a cylindrical type.)
+                    </h1>
+                <p class="topic">
+                    <div onclick="make_visible_1()" style="margin-left: 50px;">
+                    <li>
+                        <h1>Base-</h1></div>
+                        <h1 id="invisible-1" style="margin-bottom: 0px;height: 500px;"> 
+                            <ul class="sub-list" style="width: 50%;padding-left: 75px;padding-top: 200px;">
+                                The base is most important part of the Robotic Arm
+                                as the weight of all other parts including the payload will
+                                have major effect on the base.
+                            </ul>
+                            <img src="../resources/base.jpg" style="margin-left: 70%;position: relative;bottom: 300px;right: 100px;">
+                        </h1>                
+                    </li>
+                </p>
+                <p class="topic">
+                    <div onclick="make_visible_2()" style="margin-left: 50px;">
+                    <li>
+                    <h1>Joints-</h1></div>
+                    <h1 id="invisible-2" style="margin-bottom: 0px;height: 500px;">
+                        <ul class="sub-list" style="width: 50%;padding-left: 75px0px;padding-top: 200px;">
+                            There are two basic joints that can be used to build a robotic arm;
+                            Revolute joint(Rotational movement) and Prismatic joint(Linear movement).
+                            For an articulated arm, a revolute joint is used between the links as shown in
+                            figure
+                        </ul>
+                        <img src="../resources/joints.jpg" style="margin-left: 70%;position: relative;bottom: 300px;right: 100px;">
+                    </h1>
+                </li></p>
+                <p class="topic">
+                    <div onclick="make_visible_3()" style="margin-left: 50px;">
+                    <li>
+                    <h1>Links-</h1></div>
+                    <h1 id="invisible-3" style="margin-bottom: 0px;height: 500px;">
+                        <ul class="sub-list" style="width: 50%;padding-left: 75px;padding-top: 200px;">
+                            Links are the shoulders and arms of the robotic arm. These are joined to each other
+                            using joints, which then can be actuated to move the entire arm
+                        </ul>
+                        <img src="../resources/links.jpg" style="margin-left: 70%;position: relative;bottom: 300px;right: 100px;">
+                        <ul class="sub-list" style="width: 50%;padding-left: 200px;padding-top: 200px;position: relative;bottom: 200px;">
+                            Combining all three parts completes the design of our robotic arm. Next we
+                            will build this in the Coppeliasim software using a step by step procedure.
+                        </ul>
+                        <img src="../resources/arm.jpg" style="margin-left: 70%;position: relative;bottom: 500px;right: 100px;">
+                    </h1>                
+                </li></p>
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

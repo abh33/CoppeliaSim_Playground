@@ -1,0 +1,144 @@
+* {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+#log-container {
+  overflow: auto; 
+  height: 200px;
+  margin-top: 7%;
+  width: 85%;
+}
+
+.log-warn { color: orange }
+.log-error { color: red }
+.log-info { color: skyblue }
+.log-log { color: black }
+
+.log-warn, .log-error { font-weight: bold; }
+
+.e-yantra{
+    width: 20%;
+    height: auto;
+  }
+
+.back{
+    float: right;
+    padding-right: 3%;
+    padding-top: 1em;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 12% 63% 22%
+}
+
+.grid-0{
+  grid-row: 1;
+  grid-column: 1/ span 2;
+}
+
+.grid-1{
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.grid-2{
+    grid-row: 2/ span 2;
+    grid-column: 2;
+}
+
+.grid-3{
+  grid-row: 3;
+  grid-column: 1;
+}
+
+
+
+.title-box{
+    margin-left: 25px;
+    margin-right: auto;
+    margin-top: 5px;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    padding-left: 2em;
+    text-align: left;
+    width: 70%;
+    box-shadow: -3px 4px 2px 1px #d4d4d4;
+}
+
+h2{
+  font-size: 250%;
+}
+
+h3{
+  font-size: 150%;
+}
+
+h5{
+  color: rgb(0, 148, 253);
+  cursor: pointer;
+  margin-left: 32%;
+  margin-bottom: 5%;
+  font-size: larger;
+}
+h5:hover{
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.level-desc h4{
+  position: relative;
+  bottom: 5%;
+  margin-right: 15%;
+  margin-left: 30px;
+  font-size: 130%;
+}
+
+.play-buttons{
+  width: 35%;
+  background-color: rgb(162, 162, 162);
+  color: black;
+  padding: 1em;
+  margin-right: 6em;
+  margin-left: 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: -2px 3px 2px 1px #d4d4d4;
+}
+.play-buttons:hover{
+  box-shadow: -4px 6px 2px 1px #d4d4d4;
+}
+
+.demo-vid{
+  width: 80%;
+}
+
+.guide-me{
+  margin-top: 6%;
+  font-size: 150%;
+  text-align: center;
+}
+
+.star{
+  margin-top: 30px;
+  width: 137px;
+  padding-left: 90px
+}
+
+.star a{
+  width: 50px;
+  height: 50px;
+  font-size: 50px;
+  padding-left: 30px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin-top: 0;
+  position: relative;
+  bottom: 20px;
+}
+.star b{
+  position: relative;
+  left: 375px;
+  bottom: 30px;
+}

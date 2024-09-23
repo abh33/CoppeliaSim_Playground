@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_3.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">BASIC</h1>
+        </div>
+        <br><br><br>
+        <div class="content" style="margin-left: 10%;">
+            <ul class="main-list">
+                <p class="topic"><li onclick="make_visible_1()">
+                    <h1>Robot Arm Basics</h1>
+                    <h2 id="invisible-1" style="inline-size: 75%;overflow-wrap: break-word;">
+                            In the ongoing theme, the robot arm has two functions; to scan for fruits and to pluck and
+                            drop fruits. Most basic robot arm with 2 degrees of freedom will be least required to do the job.<br>(Degrees of Freedom is an
+                            independent joint that can provide freedom of movement for the manipulator, either in a
+                            rotational or translational (linear) sense. Every geometric axis that a joint can rotate around or
+                            extend along is counted as a Single Degree of Freedom.)<br><br>
+
+                            Every Robot Arm has three basic parts:<br>
+                            1. Base<br>
+                            2. Joints<br>
+                            3. Links<br><br>
+
+                            At the very last link an end effector is attached to give the robot a use case or some functionality.
+                            This end effector can be anything from a gripper, a welding torch, a paint gun, etc.<br>
+                            More details on robotic arm and its types can be found in the <a href="https://skill-lync.com/student-projects/design-of-robotic-arm">attached</a> link.</h2>                
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

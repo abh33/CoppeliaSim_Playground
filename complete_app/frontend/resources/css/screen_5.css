@@ -1,0 +1,84 @@
+* {
+    font-family: 'Fredoka', sans-serif;
+  }
+  
+  #section-a h1{
+    font-size: 50px;
+    text-align: center;
+    color: rgb(32,32,32);
+    padding-top: 0.5em;
+    
+    text-shadow: -4px 5px 2px #d0d0d0;
+  }
+
+  #section-b h2{
+    font-size: 250%;
+  }
+
+  #section-b h3{
+    font-size: 150%;
+  }
+
+
+  .level-button{
+    display: inline-block;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: #000;
+    text-align: center;
+    width: 60%;
+    margin-bottom: 50px;
+    border-radius: 10px;
+    
+    box-shadow: 2px 5px 3px 2px #b7b7b7;
+  }
+  .level-button:hover{
+    cursor: pointer;
+    
+    box-shadow: 6px 10px 3px 2px #b7b7b7;
+  }
+
+  
+  a.fill-div {
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .odd{
+    float: left;
+  }
+
+  .even{
+    float: right;
+  }
+
+  .one{
+    background-color: rgb(184, 234, 215);
+    color: rgb(14,51,42);
+  }
+
+  .two{
+    background-color: rgb(226, 240, 203);
+    color: rgb(67,71,41);
+  }
+
+  .three{
+    background-color: rgb(255, 218, 193);
+    color: rgb(69,45,37);
+  }
+
+  .four{
+    background-color: rgb(255, 183, 178);
+    color: rgb(53,27,27);
+  }
+
+  .five{
+    background-color: rgb(255, 154, 162);
+    color: rgb(53,4,8);
+  }
+  .star{
+    margin-top: 50px;
+    width: 137px;
+  }

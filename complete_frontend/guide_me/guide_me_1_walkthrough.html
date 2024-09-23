@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+    
+    <link rel="stylesheet" href="../javascript/highlight/styles/default.min.css">
+
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul><h2>
+                <li>First, open Vision_sensor’s scene object properties by double-clicking on its icon in the scene hierarchy.</li>
+                <li>Then set ‘Near/ far clipping plane’ to 1.00e-02 / 1.50e+00, ‘ortho. size’ to 00.1000.</li>
+                <li>Right-click on ‘Vision_sensor’ in scene hierarchy-->Add-->Associated child script-->Non-threaded-->Lua</li>
+                <li>Double click on the script icon to open it.</li>
+                <li>Copy-paste this code into it-</li></h2>
+                <pre>
+<code>
+function sysCall_init()
+    -- get all necessary object handles
+    vs=sim.getObject(".")
+end
+
+
+function sysCall_sensing()
+
+    --[[ By default for sim.handleVisionSensor() CoppeliaSim returns one packet of 15 auxiliary values:
+    the minimum of {intensity, red, green, blue, depth value}, 
+    the maximum of {intensity, red, green, blue, depth value}, 
+    and the average of {intensity, red, green, blue, depth value}
+    ]]--
+    detectionCount, auxiliaryValuePacket1= sim.handleVisionSensor(vs)
+
+    -- Checking if the average rgb values lie between acceptable values for orange
+    if ((auxiliaryValuePacket1[12]>=0.6 and auxiliaryValuePacket1[12]<=0.7)
+        and (auxiliaryValuePacket1[13]>=0.35 and auxiliaryValuePacket1[13]<=0.45) 
+        and (auxiliaryValuePacket1[14]>=0 and auxiliaryValuePacket1[14]<=0.05)) then
+
+    -- Set string signal to communicate data to other code in the simulation.
+        sim.setStringSignal('colorDetected','orange')
+
+    -- Checking if the average rgb values lie between acceptable values for green
+    elseif ((auxiliaryValuePacket1[12]>=0.0 and auxiliaryValuePacket1[12]<=0.05) 
+        and (auxiliaryValuePacket1[13]>=0.6 and auxiliaryValuePacket1[13]<=0.7)
+        and (auxiliaryValuePacket1[14]>=0 and auxiliaryValuePacket1[14]<=0.05)) then
+
+        sim.setStringSignal('colorDetected','green')
+
+    else
+        sim.setStringSignal('colorDetected','unknown')
+
+    end 
+end
+</code>
+                </pre>
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

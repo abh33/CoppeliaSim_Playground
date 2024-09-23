@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_4.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">BASIC</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul class="main-list">
+                <p class="topic"><li onclick="make_visible_1()">
+                    <h1>Unable to figure out how to attach the arm?</h1>
+                    <h2 id="invisible-1">Maybe a force sensor would help.</h2>                
+                </li></p>
+                <p class="topic"><li onclick="make_visible_2()">
+                    <h1>Need a gripper?</h1>
+                    <h2 id="invisible-2">Check out some of the ready-made gripper models available in CoppeliaSim.</h2>
+                </li></p>
+                <p class="topic"><li onclick="make_visible_3()">
+                    <h1>Fruit falling from gripper?</h1>
+                    <h2 id="invisible-3">Since this is a simulation, perhaps gripping it physically only isn’t the sole way of achieving your objective?</h2>                
+                </li></p>
+                <p class="topic"><li onclick="make_visible_4()">
+                    <h1>Unable to figure out how to call different functions at the right time? </h1>
+                    <h2 id="invisible-4">Look into using child scripts to enable different functions to communicate seamlessly.</h2>                
+                </li></p>
+                <p class="topic"><li onclick="make_visible_5()">
+                    <h1>Unable to figure out why your arm is misbehaving?</h1>
+                    <h2 id="invisible-5">Have you ensured that the respondable masks do not conflict with each other?</h2>                
+                </li></p>
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

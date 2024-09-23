@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_3.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content" style="margin-left: 10%;">
+            <ul class="main-list">
+                <p class="topic"><li onclick="make_visible_1()">
+                    <h1>Building a Robot Arm</h1>
+                    <h2 id="invisible-1" style="inline-size: 75%;overflow-wrap: break-word;">
+                        The basic parts can be designed in the coppeliasim software by grouping basic shapes together.
+                        (Note- If you want to design a more complex part, you can design it any CAD software and import it into
+                        Coppeliasim. Further info on this can be found <a href="https://www.coppeliarobotics.com/helpFiles/en/buildingAModelTutorial.htm">here</a>.)<br><br>
+                        <ul> <li>Add new shapes from-<br><b>Right Click=>Add=>Primitive Shapes</b></li><br>
+                            <li>Add joints from-<br><b>Right Click=>Add=>Joints</b></li><br>
+                            <li>Group two shapes from-<br><b>Right Click=>Edit=>Grouping/Merging=>Group Selected Shapes</b></li>
+                        </ul>
+                        <nobr>
+                            <img src="../resources/add_shape.jpg" style="width: 300px ; height: 300px;margin-right: 75px;">
+                            <img src="../resources/add_joint.jpg" style="width: 300px ; height: 300px;margin-right: 75px;">
+                            <img src="../resources/group_shapes.jpg" style="width: 300px ; height: 300px;margin-right: 75px;"><br>
+                            <iframe src="https://drive.google.com/file/d/1gbmG-B3kxEIAY0_4ib6DPmBVTjEqBUC5/preview" width="640" height="480" allow="autoplay"></iframe>
+                        <img src="../resources/arm_demo.gif" style="margin-left: 15%;">
+                        </nobr>
+                    </h2>                
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

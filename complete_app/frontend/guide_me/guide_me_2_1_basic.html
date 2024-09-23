@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+    <style>
+        p{
+            font-size: 33px;
+            font-family: 'Fredoka', sans-serif;
+        }
+        a{
+            font-size: 33px;
+            font-family: 'Fredoka', sans-serif;
+        }
+        img{
+            margin-right: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_2_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">BASIC</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <p>The objective of this task is to move your differential drive robot and complete the arena by
+                wall following. You will be provided with a differential drive robot along with 2 proximity
+                sensors.
+            </p>
+            <h1>Proximity Sensors:</h1>
+            <p>This is a non-contact type of sensor which can detect the presence of an object near its
+                vicinity. It works by emmiting rays and receiving them after they got reflected by the object.
+                You can check more about them <a href="https://www.fierceelectronics.com/sensors/what-a-proximity-sensor" target="_blank">here</a> or see <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiyw-LPmfj4AhXUSWwGHVjDAF4QwqsBegQISBAB&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Ds2na8CumNR0&usg=AOvVaw20BhVRlPMpg_qBX5pymRKt" target="_blank">this</a>. In this task you will use proximity sensors
+                as provided by coppeliasim. In coppeliasim the proximity sensors the distance of the
+                detected object from it along the normal vector of its surface. Some coppeliasim resources:
+            </p>
+            <a href="https://www.coppeliarobotics.com/helpFiles/en/proximitySensors.htm" target="_blank">Proximity Sensors</a>
+            <br>
+            <a href="https://www.coppeliarobotics.com/helpFiles/en/proximitySensorDescription.htm" target="_blank">Proximity sensor types and mode of operation</a>
+            <br>
+            <a href="https://www.coppeliarobotics.com/helpFiles/en/proximitySensorPropertiesDialog.htm" target="_blank">Proximity sensor properties</a>
+            <br>
+            <a href="https://www.coppeliarobotics.com/helpFiles/en/proximitySensorDetectionParameterDialog.htm" target="_blank">Proximity sensor detection parameter dialog</a>
+            <h1>Differential Drive Robot:</h1>
+            <p>
+                A Differential Drive is consist of two wheels powered by two
+                different actuators and minimum one castor wheel. By setting
+                different velocity of the two wheels the drive can be made to
+                follow any trajectory. <a href="https://www.youtube.com/watch?v=ZekupxukiOM" target="_blank">video</a>
+            </p>
+            <img src="../resources/diff_drive_robot.png" alt="Differential Drive Robot">
+            <img src="../resources/diff_drive_robot_kinematics.png" alt="kinematics of Differential Drive Robot">
+            <p>if v1 == v2 the bot will move straight. if v1 are v2 different then but have same
+                sign then the bot’s center will move with a velocity = (v1+v2)/2, and angular
+                velocity = (v1-v2)/2d. The radius of curvature will be R = (v1+v2)*d/(v1-v2).
+                If v1 is equal to v2 but opposite in sign then the bot will just rotate about its center
+                for a deep detailed kinematics refer <a href="https://www.cs.columbia.edu/~allen/F19/NOTES/icckinematics.pdf" target="_blank">this</a></p>
+        </div>
+    </div>
+    <!-- <script src="../javascript/hidden.js"></script> -->
+</body>
+</html>

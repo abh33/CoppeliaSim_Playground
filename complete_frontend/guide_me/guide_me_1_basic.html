@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">BASIC</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul class="main-list">
+                <p class="topic">
+                    <div onclick="make_visible_1()">
+                    <li>
+                        <h1>Unable to figure out how to use the vision sensor?</h1></div>
+                        <h2 id="invisible-1">
+                            <ul class="sub-list">
+                                <li>Why not try double clicking on the vision sensor icon in the scene hierarchy and experimenting around with the properties? The following links might help:</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensors.htm</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensorPropertiesDialog.htm</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/en/visionSensorDescription.htm</li>
+                            </ul>
+                        </h2>                
+                    </li></p>
+                <p class="topic"><div onclick="make_visible_2()">
+                    <li>
+                        <h1>Unable to figure out where to write the code?</h1></div>
+                        <h2 id="invisible-2">
+                            <ul class="sub-list">
+                                <li>Try learning about child scripts and what they do. The following link might help:</li>
+                                <li>https://coppeliarobotics.com/helpFiles/en/simulationScripts.htm</li>
+                            </ul>
+                        </h2>                
+                    </li></p>
+
+                <p class="topic"><div onclick="make_visible_3()">
+                    <li>
+                        <h1>Unable to figure out how to write the code?</h1></div>
+                        <h2 id="invisible-3">
+                            <ul class="sub-list">
+                                <li>Simply scroll through the various regular API functions in CoppeliaSim. You might encounter some interesting ones. The following links might help:</li>
+                                <li>https://www.coppeliarobotics.com/helpFiles/</li>
+                            </ul>
+                        </h2>                
+                    </li></p>
+            </ul>
+        </div>
+    </div>
+    <script src="../javascript/hidden.js"></script>
+</body>
+</html>

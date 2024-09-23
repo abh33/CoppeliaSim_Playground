@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+
+    <link rel="stylesheet" href="../javascript/highlight/styles/default.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_2_2.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul><h2>
+                <li>First, Right-click on 'Diff_Drive_Bot' in scene hierarchy-->Add-->Associated child script-->Non-threaded-->Lua.</li>
+                <li>Double click on the script icon to open it.</li>
+                <li>Copy-paste this code into it-</li>
+                <pre>
+<code>
+function sysCall_init()
+    ----------- do some initialization here ----------------------------------------------------
+    leftmotor = sim.getObject('./left_joint') -- handle for left motor                       ---
+    rightmotor = sim.getObject('./right_joint') -- handle for right motor                    ---
+    left = sim.getObject('./left_vision') -- handle for front left vision sensor             ---
+    right = sim.getObject('./right_vision') -- handle for front right vision sensor          ---
+    leftback = sim.getObject('./left_vision_back') -- handle for back left vision sensor     ---
+    rightback = sim.getObject('./right_vision_back') -- handle for back right vision sensor  ---
+    --------------------------------------------------------------------------------------------
+    v = 3.0 -- bot's linear velocity
+    r = 2.0 -- bot's rotational velocity
+    eps = 0.01 -- a small value
+    flag = 1 -- just a flag to know whether bot is translating or rotating( 1 means move forward)
+    initial = 0 -- a variable, will be used for time delay purposes
+    temp = 0 -- temporary variable
+end
+
+function sysCall_actuation()
+    if flag == 1 then steer() end -- if we are moving forward, just move with proper steering i.e. proper alligning with line
+    if flag == 1 and sim.getSimulationTime() - initial > 1/v then -- we want some delay after which we will start analysing sensor readings, because our sensor code is searching for turning points and we don't want it to detect same turning point again and again, so we have used a delay here so that during this time our bot will move some distance forward then our sensor code will search for next turning point
+        ------- this part is stopping bot forward movement and initiating rotation based on which side it detects line ------------
+        if (signal(leftback) < 0.3) or (signal(rightback) < 0.3) then -- if we get a turning point(and we are right above it)   ---
+            flag = 0 -- indication to stop moving forward                                                                       ---
+            initial = sim.getSimulationTime() -- capture current simulation time(will be used in line no. 41)                   ---
+            if signal(leftback) < signal(rightback) then -- if line is detected leftside                                        ---
+                move(-r,r) -- rotate anticlockwise                                                                              ---
+                temp = right -- store in temp the handle of front right vision sensor                                           ---
+            else -- line is detected on right side                                                                              ---
+                move(r,-r) -- rotate clockwise                                                                                  ---
+                temp = left -- store in temp the handle of front right vision sensor                                            ---
+            end                                                                                                                 ---
+        end                                                                                                                     ---
+        ---------------------------------------------------------------------------------------------------------------------------
+        --------- this part is to just stop the bot when it reaches the finish point -------------------------------------------------------------
+        if signal(leftback) < 0.3 and signal(rightback) < 0.3 then  -- this special condition is only satisfied at start and finish points     ---
+            move(0,0) -- stop                                                                                                                  ---
+            flag = -1 -- bot reaches it destination                                                                                            ---
+        end                                                                                                                                    ---
+        ------------------------------------------------------------------------------------------------------------------------------------------
+    end
+    if flag == 0 then -- if bot is rotating
+        if sim.getSimulationTime() - initial > 3/r and signal(temp) < 0.7 then -- after some time delay and ensuring that the next line has come in between the two front vision sensors(low value of signal(temp) indicates black line)
+            move(0,0) -- stop rotating
+            initial = sim.getSimulationTime() -- capture current simulation time(will be used in line no. 19)
+            flag = 1 -- indication to start moving forward
+        end
+    end
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+--- this function finds the average value of a Lua table -----
+function mean(t)                                           ---
+    local sum = 0                                          ---
+    for _,i in pairs(t) do                                 ---
+            sum = sum + i                                  ---
+    end                                                    ---
+    return sum/#t                                          ---
+end                                                        ---
+--------------------------------------------------------------
+---- a function to read the vision sensor readings and return the average of all pixel values -----
+function signal(sensor)                                                                         ---
+    local tab = sim.getVisionSensorImage(sensor+sim.handleflag_greyscale)                       ---
+    return mean(tab)                                                                            ---
+end                                                                                             ---
+---------------------------------------------------------------------------------------------------
+---- function for actuating bot's motors with their speed values------
+function move(L,R)                                                 ---
+    sim.setJointTargetVelocity(leftmotor, L)                       ---
+    sim.setJointTargetVelocity(rightmotor, R)                      ---
+end                                                                ---
+----------------------------------------------------------------------
+---- this is the actual line following algorithm by using vision sensor feedback ---------------------------------------------------------------------------------
+function steer()                                                                                                                                               ---
+    local l = signal(left) + eps -- calculating left motor speed coeeficient using left sensor reading(eps is to just ensure that it is not completely zero)   ---
+    local r = signal(right) + eps -- calculating left motor speed coeeficient using left sensor reading(eps is to just ensure that it is not completely zero)  ---
+    move(l*v,r*v) -- actuate bot's motors                                                                                                                      ---
+end                                                                                                                                                            ---
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------- NOTE -----------------------------------------------------------------------------------------------------------
+--   the steer function is the actual line following algorithm, the sysCall_actuation function is only to handle steep  ---
+--   turns as you can see in the arena the turns are not smmot, they need rotation around the bot's center. if turns    ---
+--   are smooth, then, only steer function is enough                                                                    ---
+---------------------------------------------------------------------------------------------------------------------------
+-- See the user manual or the available code snippets for additional callback functions and details
+
+</code>
+                </pre>
+            </h2></ul>
+            <iframe src="https://drive.google.com/file/d/1fad6JN0D6s7CkgHg4hMQRn8pGug8M-ao/preview" width="640" height="480" allow="autoplay"></iframe>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

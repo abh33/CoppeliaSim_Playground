@@ -1,0 +1,91 @@
+body{
+    background-image: url("../Illustration2.jpg"); /* line for setting background */
+    background-size:cover;
+}
+.icons{
+    height: 20px;
+    padding: 1%;
+}
+
+.welcome{
+    display: block;
+    font-size: 5vw;
+    font-weight: 200;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+    color: rgb(42, 42, 42);
+    text-shadow: -4px 5px 2px #d0d0d0;
+}
+
+/*
+.next{
+    margin: 0;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 50px;
+    font-size: 30pt;
+    font-weight: 200;
+    color: white;
+    background-color: red;
+    text-align: center ;
+    vertical-align: top;
+    padding-bottom: 70px;
+}
+
+#next-btn{
+    width: 15%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 5vw;
+    font-weight: 500;
+    color: white;
+    background-color: red;
+    border-radius: 15px;
+    cursor: pointer;
+}
+#next-btn:hover{
+    background-color: rgb(241, 73, 101);
+    box-shadow: 10px 10px 10px red;
+}
+
+.next {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+    font-size: 40px;
+    padding-left: 0.15%;
+    padding-right: 0.15%;
+    background-color: red;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}*/
+
+.next{
+    display: block;
+    margin-top: 100px;
+    margin-right: auto;
+    margin-left: 50%;
+    background: radial-gradient(rgb(229, 1, 1), rgb(214, 3, 3), rgb(188, 2, 2));
+    width: 20%;
+    border-radius: 10px;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    box-shadow: -2px 5px 3px 2px #b7b7b7;
+
+    text-align: center;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.05em;
+    padding-bottom: 0.05em;
+    font-size: 3em;
+    font-family: 'Fredoka', sans-serif;
+    text-shadow: -2px 3px 2px #791717;
+}
+
+.next:hover{
+    background: radial-gradient(rgb(145, 2, 2), rgb(176, 0, 0),red, rgb(239, 11, 11));
+}

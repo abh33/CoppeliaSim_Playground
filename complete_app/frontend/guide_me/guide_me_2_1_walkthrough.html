@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coppeliasim Playground</title>
+    <link rel="stylesheet" href="../resources/css/general.css">
+    <link rel="stylesheet" href="../resources/css/fredoka.css">
+    <link rel="stylesheet" href="../resources/css/guide_me.css">
+
+    <link rel="stylesheet" href="../javascript/highlight/styles/default.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="screen-top">
+            <img src="../resources/e-logo-small.jpg" class="e-yantra" onclick= "window.open('https://portal.e-yantra.org/', '_blank', 'location=yes,height=1000,width=1250,scrollbars=yes,status=yes');"  style="cursor: pointer;"  target="_blank">
+            <img src="../resources/back_icon.png" class="back" onclick= "location.href='../guide_me_2_1.html';" style="cursor: pointer;">
+        </div>
+        <div class="heading" >
+            <h1 style="text-align: center;">WALKTHROUGH</h1>
+        </div>
+        <br><br><br>
+        <div class="content">
+            <ul><h2>
+                <li>First, Right-click on 'Diff_Drive_Bot' in scene hierarchy-->Add-->Associated child script-->Non-threaded-->Lua.</li>
+                <li>Double click on the script icon to open it.</li>
+                <li>Copy-paste this code into it-</li>
+                <pre>
+<code>
+function sysCall_init()
+    ----- do some initialization here ------------------------------------------
+    d_s1 = sim.getObject('./distance_sensor_1') -- proximity sensor at front ---
+    d_s2 = sim.getObject('./distance_sensor_2') -- proximity sensor at side  ---
+    leftmotor = sim.getObject('./left_joint')   -- left motor                ---
+    rightmotor = sim.getObject('./right_joint') -- right motor               ---
+    ----------------------------------------------------------------------------
+    v = 3.0 -- bot's linear velocity
+    r = 2.0 -- bot's rotational velocity
+    decay_exponential = 0.2 -- this is the decay exponential which will be used in our speedcontrol loop transfer function
+    flag = 1 -- just a flag to know whether bot is translating or rotating
+    offset = 0.128 -- minimum distance between bot and front walls during stopping 
+    initial = 0 -- a variable, will be used for time delay purposes
+    count = 0 -- to store the no. of turns bot has taken
+    no_of_turns = 4 -- maximum no. of turns bot needs to take
+end
+
+function sysCall_actuation()
+    -- put your actuation code here
+    if count < no_of_turns then -- unless we have not completed all our turns
+        if flag == 1 then -- flag = 1 means that front wall is still not detected and bot should move forward
+            local rst, d, n = detect(d_s1) -- while moving forward keep checking wheteher a wall is detected or not(rst: result, it is 1 if wall is detected otherwise 0, d: distance between sensor and detected wall, n: ray vector of sensor w.r.t the normal at detected surface)
+            if rst == 1 then -- if wall is detected
+                local err = d-offset -- calculate the error(how much we are away from wall w.r.t how much we need to)
+                local decay = sign(err)*math.abs(err)^decay_exponential -- our control loop transfer function, this will decrease slowly based on the feedback of error(the transfer function used here is: decay = (sign of error(+ve/-ve))*|error|^(decay_exponential))
+                move(v*decay,v*decay) -- decrease velocity slowly
+                if math.abs(d-offset) < 0.001 then  -- some negotiations with error
+                    flag, initial = 0, sim.getSimulationTime() -- flag is changed to 0 to indicate stop moving forward and start rotating. we store the current simulation time in initial(will be used in line no. 38).
+                    count = count + 1 -- we are starting one turn
+                    move(-r,r) -- move anticlockwise
+                end
+            else -- else if wall is not detected
+                steer() -- just move bot forward
+            end
+        else -- while bot is rotating(since flag is not equals to 1)
+            local rst, d, n = detect(d_s2) -- keep reading from side sensor
+            -- the below steps are to just move make the orientation of bot parallel to to side bots for which we have exploit the ray vector, since if bot is alligned parallel to the side walls ray vector is normal to surface, y-component will become zero
+            if sim.getSimulationTime() - initial > 1 then -- we want some delay after which we will start analysing the sensor readings, because at the instance we stop moving forward, the bot is alligned parallel with its current side walls, we don't want our orientation algorithm to end before starting. remember here our aim is to allign the bot parallel to the front walls which after rotation of bot will become the new side walls
+                if n[1] >= 0 then -- if we are alligned parallel to the wall
+                    local result, _, _ = detect(d_s1) -- take sensor reading of front sensors
+                    if result == 1 then move(-r,r) else flag = 1 end -- check additionally that our front path is clear or not, if yes move forward
+                else -- still not alligned properly
+                    local decay = sign(n[1])*math.abs(n[1])^decay_exponential -- our decay transfer function
+                    move(r*decay,-r*decay) -- feedback control
+                end
+            end
+        end
+    else -- if no. of turns is completed
+        move(0,0) -- stop
+    end
+end
+
+function sysCall_sensing()
+    -- put your sensing code here
+end
+
+function sysCall_cleanup()
+    -- do some clean-up here
+end
+---- function for actuating bot's motors with their speed values------
+function move(L,R)                                                 ---
+    sim.setJointTargetVelocity(leftmotor, L)                       ---
+    sim.setJointTargetVelocity(rightmotor, R)                      ---
+end                                                                ---
+----------------------------------------------------------------------
+------------- our steering function ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function steer(P)                                                                                                                                                                                                                                     ---
+    if P == nil then P = 10 end -- if user has provided some coeeficient then take it else use default value. the more the value of P, the more vigoriusly it will respont to misallignment while moving                                              ---
+    rst, d, n = detect(d_s2) -- using our side sensor ray vector to check orientation                                                                                                                                                                 ---
+    move(P*n[1]+v,-P*n[1]+v) -- giving slight clockwise/anticlockwise rotation to bot to better its allignment with the side wall along with its forward linear velocity to keep it moving(remember if bot is perfectly alligned, n[1] will be zero)  ---
+end                                                                                                                                                                                                                                                   ---
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------- function for reading sensor readings ----------------------------------------------
+function detect(handle)                                                                     ---
+    result, distance, _, _, normal_vector = sim.checkProximitySensor(handle,sim.handle_all) ---
+    return result, distance, normal_vector                                                  ---
+end                                                                                         ---
+-----------------------------------------------------------------------------------------------
+--------- function to return sign(+ve/-ve) of a variable -----------
+function sign(x)                                                 ---
+    if x >= 0 then return 1 else return -1 end                   ---
+end                                                              ---
+--------------------------------------------------------------------
+-- See the user manual or the available code snippets for additional callback functions and details
+
+
+</code>
+                </pre>
+            </h2></ul>
+            <iframe src="https://drive.google.com/file/d/1AO0SZsOoI73YWMRAtwzlBPnfzYlKvi9I/preview" width="640" height="480" allow="autoplay"></iframe>
+        </div>
+    </div>
+    <script src="../javascript/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
