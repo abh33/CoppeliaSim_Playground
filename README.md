@@ -16,8 +16,22 @@ Python, ElectronJS, Lua, CoppeliaSim Simulator
 
 <div align="center">
 
-![img1](/Images/img_1.png)
+<img src="./Images/img_1.png" alt="im1" width=500>
 <br><b>Figure 1: CoppeliaSim Playground Welcome Screen</b>
 </div>
 
-<img src="./Images/img_2.png" alt="img2" width=360> <img src="./Images/img_3.png" alt="img3" width=360>
+<div align="center">
+<img src="./Images/img_2.png" alt="img2" width=380> <img src="./Images/img_3.png" alt="img3" width=380>
+<br><b>Figure 2: Theme Selection</b>
+</div>
+
+<div align="center">
+
+<img src="./Images/img_5.png" alt="img5" width=500>
+<br><b>Figure 3: Level Selection</b>
+</div>
+
+<div align="center">
+<img src="./Images/img_6.png" alt="img6" width=380> <img src="./Images/img_7.png" alt="img7" width=380>
+<br><b>Figure 4: Levels in a theme</b>
+</div>
